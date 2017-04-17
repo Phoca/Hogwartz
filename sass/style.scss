@@ -5,65 +5,24 @@ $border-color: #ccc;
 @import 'scaffold';
 @import 'button';
 
-td, th {
-  border-left: 1px solid $border-color;
-  border-bottom: 1px solid $border-color;
-  padding: 6px;
-  tr:first-child & {
-    border-top: 1px solid $border-color;
-  }
-
-  &:last-child {
-    border-right: 1px solid $border-color;
-  }
-}
-table {
-  margin-bottom: 10px;
+.main {
+  position: relative;
 }
 
-tr {
-  &.inactive {
-    background: #eee;
-
-    td {
-      opacity: 0.4;
-      &:first-child, &:last-child {
-        opacity: 1;
-      }
-    }
-  }
+.board {
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
-.match {
-  display: flex;
-  align-items: baseline;
-  width: 100%;
-  justify-content: space-between;
-  margin-bottom: 6px;
-
-  .save, .editResult {
-    margin-left: 10px;
-  }
+.player {
+  width: 30px;
+  height: 30px;
+  position: absolute;
 }
 
-.match .result, .match .input {
-}
-.match .result {
-  display: none;
-}
-
-.match.finished .result {
-  display: inline;
-}
-.match.finished .input {
-  display: none;
-}
-
-input {
-  min-height: 26px;
-  min-width: 32px;
-  text-align: center;
-}
-.match.deleted {
-  text-decoration: line-through;
+.field {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.5);
+  border: 3px solid red;
 }

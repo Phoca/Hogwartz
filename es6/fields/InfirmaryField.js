@@ -1,4 +1,4 @@
-import "../Field";
+import Field from "../Field";
 
 export default class InfirmaryField extends Field {
 

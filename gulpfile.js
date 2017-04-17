@@ -18,9 +18,11 @@ var config = {
 watchify.args.debug = true;
 var bundler = watchify(browserify(__dirname + '/es6/main.js', watchify.args));
 
+
 // Babel transform
 bundler.transform(babelify.configure({
-    sourceMapRelative: 'es6'
+    sourceMapRelative: 'es6',
+    presets: ["es2015"]
 }));
 
 // On updates recompile
@@ -28,8 +30,13 @@ bundler.on('update', bundle);
 
 function bundle() {
 
+    console.log("bundling ...");
+
+
     return bundler.bundle()
         .on('error', function (err) {
+            console.log(err);
+
             browserSync.notify("Browserify Error!");
             this.emit("end");
         })

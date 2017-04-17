@@ -435,47 +435,20 @@ button {
 .startNewRound {
   top: 18px; }
 
-td, th {
-  border-left: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
-  padding: 6px; }
-  tr:first-child td, tr:first-child th {
-    border-top: 1px solid #ccc; }
-  td:last-child, th:last-child {
-    border-right: 1px solid #ccc; }
+.main {
+  position: relative; }
 
-table {
-  margin-bottom: 10px; }
+.board {
+  position: absolute;
+  left: 0;
+  top: 0; }
 
-tr.inactive {
-  background: #eee; }
-  tr.inactive td {
-    opacity: 0.4; }
-    tr.inactive td:first-child, tr.inactive td:last-child {
-      opacity: 1; }
+.player {
+  width: 30px;
+  height: 30px;
+  position: absolute; }
 
-.match {
-  display: flex;
-  align-items: baseline;
-  width: 100%;
-  justify-content: space-between;
-  margin-bottom: 6px; }
-  .match .save, .match .editResult {
-    margin-left: 10px; }
-
-.match .result {
-  display: none; }
-
-.match.finished .result {
-  display: inline; }
-
-.match.finished .input {
-  display: none; }
-
-input {
-  min-height: 26px;
-  min-width: 32px;
-  text-align: center; }
-
-.match.deleted {
-  text-decoration: line-through; }
+.field {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.5);
+  border: 3px solid red; }
