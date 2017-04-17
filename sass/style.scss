@@ -1,0 +1,69 @@
+$blue: #286798;
+$border-color: #ccc;
+
+@import 'normalize';
+@import 'scaffold';
+@import 'button';
+
+td, th {
+  border-left: 1px solid $border-color;
+  border-bottom: 1px solid $border-color;
+  padding: 6px;
+  tr:first-child & {
+    border-top: 1px solid $border-color;
+  }
+
+  &:last-child {
+    border-right: 1px solid $border-color;
+  }
+}
+table {
+  margin-bottom: 10px;
+}
+
+tr {
+  &.inactive {
+    background: #eee;
+
+    td {
+      opacity: 0.4;
+      &:first-child, &:last-child {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.match {
+  display: flex;
+  align-items: baseline;
+  width: 100%;
+  justify-content: space-between;
+  margin-bottom: 6px;
+
+  .save, .editResult {
+    margin-left: 10px;
+  }
+}
+
+.match .result, .match .input {
+}
+.match .result {
+  display: none;
+}
+
+.match.finished .result {
+  display: inline;
+}
+.match.finished .input {
+  display: none;
+}
+
+input {
+  min-height: 26px;
+  min-width: 32px;
+  text-align: center;
+}
+.match.deleted {
+  text-decoration: line-through;
+}

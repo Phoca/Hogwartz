@@ -1,0 +1,57 @@
+@font-face {
+  font-family: 'Roboto';
+  font-weight: 400;
+  src: url('../fonts/Roboto-Regular.woff')  format('woff');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-weight: 700;
+  src: url('../fonts/Roboto-Bold.woff')  format('woff');
+}
+
+
+* {
+  font-family: Roboto, sans-serif;
+  box-sizing: content-box;
+}
+
+
+h1, h2, h3 {
+  color: $blue;
+}
+body {
+  background: $blue;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 100vh;
+}
+
+.container {
+  max-width: 90vw;
+  background: white;
+  margin: 0 auto;
+  min-height: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+}
+
+$spacing: 20px;
+
+.header {
+  margin-right: $spacing;
+  margin-left: $spacing;
+  padding-top: 15px;;
+}
+.row {
+  display: flex;
+}
+
+.col {
+  margin-right: $spacing;
+  margin-left: $spacing;
+  padding-bottom: 20px;
+  flex-grow: 1;
+
+}

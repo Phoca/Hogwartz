@@ -1,0 +1,32 @@
+button {
+  color: $blue;
+  background: transparent;
+  border: 1px solid $blue;
+  margin-right: 5px;
+  padding: 1px 6px;
+  height: 27px;
+
+  &:hover {
+    cursor: pointer;
+    color: white;
+    background: $blue;
+  }
+
+}
+
+.pull_up_container {
+  position: relative;
+}
+
+
+.startNewRound, .resetAll {
+  position: absolute;
+  right: 0;
+}
+.resetAll {
+  top: 36px;
+}
+
+.startNewRound {
+  top: 18px;
+}

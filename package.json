@@ -1,0 +1,23 @@
+{
+  "name": "turnier",
+  "version": "1.0.0",
+  "description": "Turnier",
+  "private": true,
+  "author": "Thorsten Hack",
+  "licence": "NONE",
+  "devDependencies": {
+    "babelify": "^7.3.0",
+    "browser-sync": "^2.18.8",
+    "browserify": "^14.3.0",
+    "gulp": "^3.9.1",
+    "watchify": "^3.9.0",
+    "exorcist": "^0.4.0",
+    "vinyl-source-stream": "^1.1.0"
+  },
+  "dependencies": {
+    "bootstrap": "https://github.com/twbs/bootstrap/archive/v4.0.0-alpha.tar.gz",
+    "gulp-sass": "^3.1.0",
+    "jquery": "^3.2.1",
+    "node-event-emitter": "0.0.1"
+  }
+}
