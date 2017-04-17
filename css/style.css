@@ -438,6 +438,27 @@ button {
 .main {
   position: relative; }
 
+.right {
+  float: left;
+  margin-left: 1050px; }
+
+.dice {
+  width: 100px;
+  height: 100px;
+  background: url(../img/dice.png); }
+  .dice.number1 {
+    background-position: 0 0; }
+  .dice.number2 {
+    background-position: -100px 0; }
+  .dice.number3 {
+    background-position: -200px 0; }
+  .dice.number4 {
+    background-position: -300px 0; }
+  .dice.number5 {
+    background-position: -400px 0; }
+  .dice.number6 {
+    background-position: -500px 0; }
+
 .board {
   position: absolute;
   left: 0;
@@ -446,9 +467,13 @@ button {
 .player {
   width: 30px;
   height: 30px;
-  position: absolute; }
+  position: absolute;
+  transition: all 0.3s ease; }
 
 .field {
   position: absolute;
   background-color: rgba(0, 0, 0, 0.5);
   border: 3px solid red; }
+
+.clickable {
+  cursor: pointer; }

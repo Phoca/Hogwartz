@@ -38,14 +38,18 @@ export default class Field {
         this.$el.css("top", this.y1);
         this.$el.css("width", this.x2 - this.x1);
         this.$el.css("height", this.y2 - this.y1);
+        this.$el.show();
+    }
+
+    unhighlight() {
+        if(this.$el) {
+            this.$el.hide();
+            this.$el.removeClass('clickable');
+            this.$el.off('click');
+        }
     }
 
     getNeighbours(callers, steps) {
-
-        // this.debugMe();
-        // console.log(this.name, steps);
-
-        console.log(this.name, steps, callers);
 
         if (steps == 1) {
             return this.neighbours;
@@ -75,5 +79,12 @@ export default class Field {
             tmp += this.neighbours[i].name + ", ";
         }
         console.log("I am " + this.name + ", my neighbours are " + tmp);
+    }
+
+    setClickListener(callback) {
+        if(this.$el) {
+            this.$el.addClass('clickable');
+            this.$el.on('click', () => callback(this));
+        }
     }
 }

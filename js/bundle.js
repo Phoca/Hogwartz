@@ -1,4 +1,73 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _jquery = require('jquery');
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Dice = function () {
+    function Dice() {
+        _classCallCheck(this, Dice);
+
+        this.$el = (0, _jquery2.default)('.dice');
+    }
+
+    _createClass(Dice, [{
+        key: 'roll',
+        value: function roll() {
+            this.$el.off('click');
+            this.rolling(Dice.ROLLS);
+        }
+    }, {
+        key: 'rolling',
+        value: function rolling(times) {
+            var _this = this;
+
+            this.removeClasses();
+            var number = parseInt(Math.random() * 6) + 1;
+            this.$el.addClass("number" + number);
+
+            if (times == 0) {
+                this.callback(number);
+            } else {
+                setTimeout(function () {
+                    return _this.rolling(times - 1);
+                }, Dice.ROLL_TIMEOUT);
+            }
+        }
+    }, {
+        key: 'removeClasses',
+        value: function removeClasses() {
+            this.$el.attr("class", "dice");
+        }
+    }, {
+        key: 'enableClick',
+        value: function enableClick(callback) {
+            this.$el.addClass("clickable");
+            this.callback = callback;
+            this.$el.on('click', this.roll.bind(this));
+        }
+    }]);
+
+    return Dice;
+}();
+
+Dice.ROLL_TIMEOUT = 50;
+Dice.ROLLS = 10;
+
+exports.default = new Dice();
+
+},{"jquery":20}],2:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -62,15 +131,20 @@ var Field = function () {
             this.$el.css("top", this.y1);
             this.$el.css("width", this.x2 - this.x1);
             this.$el.css("height", this.y2 - this.y1);
+            this.$el.show();
+        }
+    }, {
+        key: "unhighlight",
+        value: function unhighlight() {
+            if (this.$el) {
+                this.$el.hide();
+                this.$el.removeClass('clickable');
+                this.$el.off('click');
+            }
         }
     }, {
         key: "getNeighbours",
         value: function getNeighbours(callers, steps) {
-
-            // this.debugMe();
-            // console.log(this.name, steps);
-
-            console.log(this.name, steps, callers);
 
             if (steps == 1) {
                 return this.neighbours;
@@ -102,6 +176,18 @@ var Field = function () {
             }
             console.log("I am " + this.name + ", my neighbours are " + tmp);
         }
+    }, {
+        key: "setClickListener",
+        value: function setClickListener(callback) {
+            var _this = this;
+
+            if (this.$el) {
+                this.$el.addClass('clickable');
+                this.$el.on('click', function () {
+                    return callback(_this);
+                });
+            }
+        }
     }]);
 
     return Field;
@@ -109,12 +195,14 @@ var Field = function () {
 
 exports.default = Field;
 
-},{"jquery":19}],2:[function(require,module,exports){
+},{"jquery":20}],3:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _jquery = require('jquery');
 
@@ -124,19 +212,51 @@ var _EventBus = require('./utils/EventBus');
 
 var _EventBus2 = _interopRequireDefault(_EventBus);
 
+var _Dice = require('./Dice');
+
+var _Dice2 = _interopRequireDefault(_Dice);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var GameLoop = function GameLoop() {
-    _classCallCheck(this, GameLoop);
+var GameLoop = function () {
+    function GameLoop() {
+        _classCallCheck(this, GameLoop);
 
-    this.users = [];
-};
+        this.players = [];
+        this.turnIndex = -1;
+        this.$name = (0, _jquery2.default)('.nameField');
+    }
+
+    _createClass(GameLoop, [{
+        key: 'addPlayer',
+        value: function addPlayer(player) {
+            this.players.push(player);
+            player.draw();
+        }
+    }, {
+        key: 'go',
+        value: function go() {
+            var _this = this;
+
+            this.turnIndex = (this.turnIndex + 1) % this.players.length;
+            var player = this.players[this.turnIndex];
+
+            this.$name.text(player.name);
+            this.$name.css("color", player.colour);
+            _Dice2.default.enableClick(function (number) {
+                player.moveBy(number, _this.go.bind(_this));
+            });
+        }
+    }]);
+
+    return GameLoop;
+}();
 
 exports.default = GameLoop;
 
-},{"./utils/EventBus":18,"jquery":19}],3:[function(require,module,exports){
+},{"./Dice":1,"./utils/EventBus":19,"jquery":20}],4:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -159,6 +279,22 @@ var Player = function () {
 
         this.name = name;
         this.house = house;
+
+        switch (this.house) {
+            case Player.HOUSES.SLYTHERIN:
+                this.colour = "green";
+                break;
+            case Player.HOUSES.GRYFFINDOR:
+                this.colour = "red";
+                break;
+            case Player.HOUSES.HUFFLEPUFF:
+                this.colour = "yellow";
+                break;
+            case Player.HOUSES.RAVENCLAW:
+                this.colour = "blue";
+                break;
+        }
+
         this.sp = 0;
         this.hp = 10;
     }
@@ -192,23 +328,7 @@ var Player = function () {
         key: "draw",
         value: function draw() {
             if (!this.$el) {
-                var colour;
-                switch (this.house) {
-                    case Player.HOUSES.SLYTHERIN:
-                        colour = "green";
-                        break;
-                    case Player.HOUSES.GRYFFINDOR:
-                        colour = "red";
-                        break;
-                    case Player.HOUSES.HUFFLEPUFF:
-                        colour = "yellow";
-                        break;
-                    case Player.HOUSES.RAVENCLAW:
-                        colour = "blue";
-                        break;
-
-                }
-                this.$el = (0, _jquery2.default)("<div class=\"player\" style=\"background-color: " + colour + "\"></div>");
+                this.$el = (0, _jquery2.default)("<div class=\"player\" style=\"background-color: " + this.colour + "\"></div>");
                 this.$el.appendTo((0, _jquery2.default)(".main"));
             }
 
@@ -217,11 +337,21 @@ var Player = function () {
         }
     }, {
         key: "moveBy",
-        value: function moveBy(steps) {
+        value: function moveBy(steps, callback) {
             var possibleFields = this.field.getNeighbours([], steps);
+
+            var makeMove = function makeMove(field) {
+                for (var i = 0; i < possibleFields.length; i++) {
+                    possibleFields[i].unhighlight();
+                }
+                this.field = field;
+                this.draw();
+                callback(field);
+            };
 
             for (var i = 0; i < possibleFields.length; i++) {
                 possibleFields[i].highlight();
+                possibleFields[i].setClickListener(makeMove.bind(this));
             }
         }
     }]);
@@ -240,7 +370,7 @@ Player.RADIUS = 15;
 
 exports.default = Player;
 
-},{"jquery":19}],4:[function(require,module,exports){
+},{"jquery":20}],5:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -282,7 +412,7 @@ var CommonRoomField = function (_Field) {
 
 exports.default = CommonRoomField;
 
-},{"../Field":1}],5:[function(require,module,exports){
+},{"../Field":2}],6:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -324,7 +454,7 @@ var DrawEventCardField = function (_Field) {
 
 exports.default = DrawEventCardField;
 
-},{"../Field":1}],6:[function(require,module,exports){
+},{"../Field":2}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -366,7 +496,7 @@ var DrawPotionCardField = function (_Field) {
 
 exports.default = DrawPotionCardField;
 
-},{"../Field":1}],7:[function(require,module,exports){
+},{"../Field":2}],8:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -408,7 +538,7 @@ var DrawSpellCardField = function (_Field) {
 
 exports.default = DrawSpellCardField;
 
-},{"../Field":1}],8:[function(require,module,exports){
+},{"../Field":2}],9:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -450,7 +580,7 @@ var GainTenSpellPointsField = function (_Field) {
 
 exports.default = GainTenSpellPointsField;
 
-},{"../Field":1}],9:[function(require,module,exports){
+},{"../Field":2}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -492,7 +622,7 @@ var GainTwoHealthPointsField = function (_Field) {
 
 exports.default = GainTwoHealthPointsField;
 
-},{"../Field":1}],10:[function(require,module,exports){
+},{"../Field":2}],11:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -534,7 +664,7 @@ var HallwayField = function (_Field) {
 
 exports.default = HallwayField;
 
-},{"../Field":1}],11:[function(require,module,exports){
+},{"../Field":2}],12:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -576,7 +706,7 @@ var InfirmaryField = function (_Field) {
 
 exports.default = InfirmaryField;
 
-},{"../Field":1}],12:[function(require,module,exports){
+},{"../Field":2}],13:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -618,7 +748,7 @@ var LibraryField = function (_Field) {
 
 exports.default = LibraryField;
 
-},{"../Field":1}],13:[function(require,module,exports){
+},{"../Field":2}],14:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -660,7 +790,7 @@ var PortalField = function (_Field) {
 
 exports.default = PortalField;
 
-},{"../Field":1}],14:[function(require,module,exports){
+},{"../Field":2}],15:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -702,7 +832,7 @@ var PotionsShop = function (_Field) {
 
 exports.default = PotionsShop;
 
-},{"../Field":1}],15:[function(require,module,exports){
+},{"../Field":2}],16:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -744,7 +874,7 @@ var RoomOfRequirementField = function (_Field) {
 
 exports.default = RoomOfRequirementField;
 
-},{"../Field":1}],16:[function(require,module,exports){
+},{"../Field":2}],17:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -786,7 +916,7 @@ var VanishingCabinetField = function (_Field) {
 
 exports.default = VanishingCabinetField;
 
-},{"../Field":1}],17:[function(require,module,exports){
+},{"../Field":2}],18:[function(require,module,exports){
 'use strict';
 
 var _Player = require('./Player');
@@ -1009,12 +1139,16 @@ gryffindor.setField(commonRoomGryffindor);
 var slytherin = new _Player2.default("Thorsten", _Player2.default.HOUSES.SLYTHERIN);
 slytherin.setField(commonRoomSlytherin);
 
-gryffindor.draw();
-slytherin.draw();
+var ravenclaw = new _Player2.default("Miriam", _Player2.default.HOUSES.RAVENCLAW);
+ravenclaw.setField(commonRoomRavenclaw);
 
-gryffindor.moveBy(4);
+gameLoop.addPlayer(gryffindor);
+gameLoop.addPlayer(slytherin);
+gameLoop.addPlayer(ravenclaw);
 
-},{"./GameLoop":2,"./Player":3,"./fields/CommonRoomField":4,"./fields/DrawEventCardField":5,"./fields/DrawPotionCardField":6,"./fields/DrawSpellCardField":7,"./fields/GainTenSpellPointsField":8,"./fields/GainTwoHealthPointsField":9,"./fields/HallwayField":10,"./fields/InfirmaryField":11,"./fields/LibraryField":12,"./fields/PortalField":13,"./fields/PotionsShop":14,"./fields/RoomOfRequirementField":15,"./fields/VanishingCabinetField":16,"jquery":19}],18:[function(require,module,exports){
+gameLoop.go();
+
+},{"./GameLoop":3,"./Player":4,"./fields/CommonRoomField":5,"./fields/DrawEventCardField":6,"./fields/DrawPotionCardField":7,"./fields/DrawSpellCardField":8,"./fields/GainTenSpellPointsField":9,"./fields/GainTwoHealthPointsField":10,"./fields/HallwayField":11,"./fields/InfirmaryField":12,"./fields/LibraryField":13,"./fields/PortalField":14,"./fields/PotionsShop":15,"./fields/RoomOfRequirementField":16,"./fields/VanishingCabinetField":17,"jquery":20}],19:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1066,7 +1200,7 @@ var EventBus = function (_Emitter) {
 
 exports.default = new EventBus();
 
-},{"node-event-emitter":20}],19:[function(require,module,exports){
+},{"node-event-emitter":21}],20:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v3.2.1
  * https://jquery.com/
@@ -11321,7 +11455,7 @@ if ( !noGlobal ) {
 return jQuery;
 } );
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 /**
  * Utility functions
  */
@@ -11618,5 +11752,5 @@ EventEmitter.listenerCount = function(emitter, type) {
   return ret;
 };
 
-},{}]},{},[17])
+},{}]},{},[18])
 //# sourceMappingURL=bundle.js.map

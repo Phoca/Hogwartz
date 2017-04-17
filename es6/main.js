@@ -173,7 +173,11 @@ gryffindor.setField(commonRoomGryffindor);
 var slytherin = new Player("Thorsten", Player.HOUSES.SLYTHERIN);
 slytherin.setField(commonRoomSlytherin);
 
-gryffindor.draw();
-slytherin.draw();
+var ravenclaw = new Player("Miriam", Player.HOUSES.RAVENCLAW);
+ravenclaw.setField(commonRoomRavenclaw);
 
-gryffindor.moveBy(4);
+gameLoop.addPlayer(gryffindor);
+gameLoop.addPlayer(slytherin);
+gameLoop.addPlayer(ravenclaw);
+
+gameLoop.go();

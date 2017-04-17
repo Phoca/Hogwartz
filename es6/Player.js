@@ -7,6 +7,22 @@ class Player {
 
         this.name = name;
         this.house = house;
+
+        switch(this.house) {
+            case Player.HOUSES.SLYTHERIN:
+                this.colour = "green";
+                break;
+            case Player.HOUSES.GRYFFINDOR:
+                this.colour = "red";
+                break;
+            case Player.HOUSES.HUFFLEPUFF:
+                this.colour = "yellow";
+                break;
+            case Player.HOUSES.RAVENCLAW:
+                this.colour = "blue";
+                break;
+        }
+
         this.sp = 0;
         this.hp = 10;
     }
@@ -34,23 +50,7 @@ class Player {
 
     draw() {
         if(!this.$el) {
-            var colour;
-            switch(this.house) {
-                case Player.HOUSES.SLYTHERIN:
-                    colour = "green";
-                    break;
-                case Player.HOUSES.GRYFFINDOR:
-                    colour = "red";
-                    break;
-                case Player.HOUSES.HUFFLEPUFF:
-                    colour = "yellow";
-                    break;
-                case Player.HOUSES.RAVENCLAW:
-                    colour = "blue";
-                    break;
-
-            }
-            this.$el = $(`<div class="player" style="background-color: ${colour}"></div>`);
+            this.$el = $(`<div class="player" style="background-color: ${this.colour}"></div>`);
             this.$el.appendTo($(".main"));
         }
 
@@ -58,11 +58,21 @@ class Player {
         this.$el.css("top", this.field.getCenterY() - Player.RADIUS);
     }
 
-    moveBy(steps) {
+    moveBy(steps, callback) {
         var possibleFields = this.field.getNeighbours([], steps);
+
+        var makeMove = function(field) {
+            for(var i=0; i<possibleFields.length; i++) {
+                possibleFields[i].unhighlight();
+            }
+            this.field = field;
+            this.draw();
+            callback(field);
+        };
 
         for(var i=0; i<possibleFields.length; i++) {
             possibleFields[i].highlight();
+            possibleFields[i].setClickListener(makeMove.bind(this));
         }
 
     }
