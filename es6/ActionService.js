@@ -3,7 +3,7 @@
 class ActionService {
 
     changeSp(player, amount) {
-        player.changeHp(amount);
+        player.changeSp(amount);
     }
 
     changeHp(player, amount) {

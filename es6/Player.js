@@ -1,6 +1,5 @@
 import $ from 'jquery';
 
-
 class Player {
 
     constructor(name, house) {
@@ -24,7 +23,7 @@ class Player {
         }
 
         this.sp = 0;
-        this.hp = 5;
+        this.hp = 10;
     }
 
     getSp() {
@@ -33,6 +32,9 @@ class Player {
 
     changeSp(val) {
         this.sp += val;
+        if(this.sp < 0) {
+            this.sp = 0;
+        }
     }
 
     getHp() {
@@ -46,9 +48,24 @@ class Player {
         }
     }
 
+    setHomeField(field) {
+        this.homeField = field;
+    }
+
+    setToHome() {
+        this.setField(this.homeField);
+    }
 
     setField(field) {
         this.field = field;
+        this.draw();
+    }
+
+    roundOver() {
+        if(this.sp < 100) {
+            this.changeSp(5);
+        }
+        this.changeHp(1);
     }
 
     draw() {

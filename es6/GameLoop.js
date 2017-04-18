@@ -1,13 +1,15 @@
 import $ from 'jquery';
 import eventBus from './utils/EventBus';
 import dice from './Dice';
+import swal from 'sweetalert2';
 
-export default class GameLoop {
+
+class GameLoop {
 
 
     constructor() {
         this.players = [];
-        this.turnIndex = -1;
+        this.turnIndex = 0;
         this.$name = $('.nameField');
         this.$message = $('.message');
         this.$tableContainer = $('.standings');
@@ -19,17 +21,29 @@ export default class GameLoop {
     }
 
     go() {
+        this.$message.text("Roll the dice!");
         this.drawTable();
 
-        this.$message.text("Roll the dice!");
-        this.turnIndex = (this.turnIndex + 1) % this.players.length;
         var player = this.players[this.turnIndex];
 
         this.$name.text(player.name);
         this.$name.css("color", player.colour);
         dice.enableClick((number) => {
-            player.moveBy(number, this.go.bind(this));
+            player.moveBy(number, this.incrementTurnIndexAndGo.bind(this));
         });
+    }
+
+    incrementTurnIndexAndGo() {
+        this.turnIndex += 1;
+        if(this.turnIndex >= this.players.length) {
+            for (var i = 0; i < this.players.length; i++) {
+                this.players[i].roundOver();
+            }
+            swal({title: "The round is over", text: "Everyone gains 5 SP and 1 HP"}).then(this.go.bind(this));
+            this.turnIndex = 0;
+        } else {
+            this.go();
+        }
     }
 
     drawTable() {
@@ -50,5 +64,6 @@ export default class GameLoop {
     }
 
 
-
 }
+
+export default new GameLoop();

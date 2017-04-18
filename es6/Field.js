@@ -1,8 +1,6 @@
 import $ from 'jquery';
-import swal from 'sweetalert';
 
-
-export default class Field {
+class Field {
 
     init(name, x1, y1, x2, y2, isUpperLevel) {
         this.name = name;
@@ -90,7 +88,11 @@ export default class Field {
         }
     }
 
-    showMessage(title, message) {
-        swal(title, message, "info");
-    }
 }
+
+
+
+
+
+
+export default Field;

@@ -1,8 +1,9 @@
 import Player from './Player';
-import GameLoop from './GameLoop';
+import gameLoop from './GameLoop';
 
 import $ from 'jquery';
 
+import Field from './Field';
 import CommonRoomField from './fields/CommonRoomField';
 import DrawEventCardField from './fields/DrawEventCardField';
 import DrawPotionCardField from './fields/DrawPotionCardField';
@@ -17,9 +18,7 @@ import PortalField from './fields/PortalField';
 import RoomOfRequirementField from './fields/RoomOfRequirementField';
 import VanishingCabinetField from './fields/VanishingCabinetField';
 
-var gameLoop = new GameLoop();
-
-var greenhouseField = new GainTwoHealthPointsField();
+var greenhouseField = new GainTenSpellPointsField();
 greenhouseField.init("greenhouseField", 826, 164, 959, 323, false);
 
 var commonRoomHufflepuff = new CommonRoomField();
@@ -166,14 +165,19 @@ forbiddenForest4.setNeighbours([snapesCabinet, dumbledoresOffice]);
 dumbledoresOffice.setNeighbours([forbiddenForest4, vanishingCabinet]);
 vanishingCabinet.setNeighbours([dumbledoresOffice, forbiddenForest1, roomOfRequirement]);
 
+Field.HAGRIDS_CABIN = hagridsCabin;
+
 
 var gryffindor = new Player("Konrad", Player.HOUSES.GRYFFINDOR);
+gryffindor.setHomeField(commonRoomGryffindor);
 gryffindor.setField(commonRoomGryffindor);
 
 var slytherin = new Player("Thorsten", Player.HOUSES.SLYTHERIN);
+slytherin.setHomeField(commonRoomSlytherin);
 slytherin.setField(commonRoomSlytherin);
 
 var ravenclaw = new Player("Miriam", Player.HOUSES.RAVENCLAW);
+ravenclaw.setHomeField(commonRoomRavenclaw);
 ravenclaw.setField(commonRoomRavenclaw);
 
 gameLoop.addPlayer(gryffindor);

@@ -1,8 +1,9 @@
 import Field from "../Field";
+import eventCardManager from "../EventCard";
 
 export default class DrawEventCardField extends Field {
 
     doAction(player, callback) {
-        callback(); // do nothing
+        eventCardManager.drawCard(player, callback);
     }
 }
