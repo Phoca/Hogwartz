@@ -3,7 +3,7 @@ import Field from "../Field";
 export default class DrawPotionCardField extends Field {
 
 
-    doAction(player) {
-        // do nothing
+    doAction(player, callback) {
+        callback(); // do nothing
     }
 }

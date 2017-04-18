@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import swal from 'sweetalert';
 
 
 export default class Field {
@@ -24,8 +25,9 @@ export default class Field {
         this.neighbours = neighbours;
     }
 
-    doAction() {
+    doAction(player, callback) {
         console.error("Class should override doAction");
+        callback();
     }
 
     highlight() {
@@ -86,5 +88,9 @@ export default class Field {
             this.$el.addClass('clickable');
             this.$el.on('click', () => callback(this));
         }
+    }
+
+    showMessage(title, message) {
+        swal(title, message, "info");
     }
 }

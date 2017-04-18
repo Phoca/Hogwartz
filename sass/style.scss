@@ -2,8 +2,10 @@ $blue: #286798;
 $border-color: #ccc;
 
 @import 'normalize';
+@import 'sweetalert';
 @import 'scaffold';
 @import 'button';
+@import 'bootstrap/tables';
 
 .main {
   position: relative;
@@ -60,4 +62,8 @@ $border-color: #ccc;
 
 .clickable {
   cursor: pointer;
+}
+
+.standings-table {
+  margin-top: 30px;
 }

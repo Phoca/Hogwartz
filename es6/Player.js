@@ -24,7 +24,7 @@ class Player {
         }
 
         this.sp = 0;
-        this.hp = 10;
+        this.hp = 5;
     }
 
     getSp() {
@@ -41,6 +41,9 @@ class Player {
 
     changeHp(val) {
         this.hp += val;
+        if(this.hp > 10) {
+            this.hp = 10;
+        }
     }
 
 
@@ -67,13 +70,17 @@ class Player {
             }
             this.field = field;
             this.draw();
-            callback(field);
+            field.doAction(this, () => {
+                callback(field);
+            });
         };
 
         for(var i=0; i<possibleFields.length; i++) {
             possibleFields[i].highlight();
             possibleFields[i].setClickListener(makeMove.bind(this));
         }
+
+        $('.message').text("Choose your field!");
 
     }
 }
